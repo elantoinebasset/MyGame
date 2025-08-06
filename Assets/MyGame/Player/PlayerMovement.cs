@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 
 public class PlayerMouvement : MonoBehaviour
@@ -9,7 +10,7 @@ public class PlayerMouvement : MonoBehaviour
     private bool isGrounded;
 
 
-
+    public float IsRunning = 0f;
     public float Stamina = 100f;
     public float StaminaDrainRate = 1f;
     public float StaminaRegenRate = 2f;
@@ -46,11 +47,12 @@ public class PlayerMouvement : MonoBehaviour
 
 
 
-        //Stamina and Regeneration
+//Stamina and Regeneration
         if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
         {
             moveSpeed = 10f;
             Stamina -= StaminaDrainRate * Time.deltaTime;
+            IsRunning = 1f;
             if (Stamina < 0f)
             {
                 Stamina = 0f;
@@ -59,6 +61,7 @@ public class PlayerMouvement : MonoBehaviour
         else
         {
             moveSpeed = 5f;
+            IsRunning = 0f;
             Stamina += StaminaRegenRate * Time.deltaTime;
             if (Stamina > 100f)
             {
