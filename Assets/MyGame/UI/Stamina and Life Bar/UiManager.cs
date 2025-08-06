@@ -26,13 +26,13 @@ public class UIManager : MonoBehaviour
 
     void UpdateUI()
     {
-        // Mettre à jour la barre de stamina
+
         if (staminaBar != null && playerMovement != null)
         {
             staminaBar.value = playerMovement.Stamina;
         }
         
-        // Mettre à jour la barre de santé
+
         if (healthBar != null)
         {
             healthBar.value = currentHealth;
