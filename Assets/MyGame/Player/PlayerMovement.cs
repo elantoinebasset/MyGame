@@ -34,6 +34,8 @@ public class PlayerMouvement : MonoBehaviour
         Vector3 direction = (CameraTransform.forward * Vertical + CameraTransform.right * Horizontal).normalized;
         direction.y = 0;
 
+        IsRunning = (Mathf.Abs(Horizontal) > 0 || Mathf.Abs(Vertical) > 0) ? 1f : 0f;
+
         Vector3 newVelocity = direction * moveSpeed;
         newVelocity.y = rb.linearVelocity.y;
         rb.linearVelocity = newVelocity;
@@ -48,11 +50,10 @@ public class PlayerMouvement : MonoBehaviour
 
 
 //Stamina and Regeneration
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && IsRunning > 0f)
         {
             moveSpeed = 10f;
             Stamina -= StaminaDrainRate * Time.deltaTime;
-            IsRunning = 1f;
             if (Stamina < 0f)
             {
                 Stamina = 0f;
@@ -61,7 +62,6 @@ public class PlayerMouvement : MonoBehaviour
         else
         {
             moveSpeed = 5f;
-            IsRunning = 0f;
             Stamina += StaminaRegenRate * Time.deltaTime;
             if (Stamina > 100f)
             {
