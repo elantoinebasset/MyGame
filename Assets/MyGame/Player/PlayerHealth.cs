@@ -12,6 +12,7 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Code to make some test on the health
         if (Input.GetKeyDown(KeyCode.R))
         {
             CurrentHealth -= 10f;

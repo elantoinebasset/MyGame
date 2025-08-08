@@ -26,12 +26,14 @@ public class PlayerInteraction : MonoBehaviour
         CheckForInteractable();
         HandleInteractionInput();
     }
-
+//Check for interactable objects within range (A ne pas toucher car je l'ai mis public)
     void CheckForInteractable()
     {
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         RaycastHit hit;
-        
+
+        // pas visible par le joueur mais par le dev oui (visible dans la scène et pas dans la game)
+
         Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
 
 

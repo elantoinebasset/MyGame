@@ -27,6 +27,7 @@ public class CameraMovement : MonoBehaviour
     }
     void OnGUI()
 {
+    // Display the FPS 
     GUI.Label(new Rect(10, 10, 100, 20), "FPS: " + (1.0f / Time.deltaTime).ToString("F0"));
 }
 }

@@ -69,7 +69,7 @@ public class PlayerMouvement : MonoBehaviour
             }
         }
     }
-
+//Ground Check
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -78,7 +78,7 @@ public class PlayerMouvement : MonoBehaviour
             Debug.Log("Player is grounded");
         }
     }
-
+//Ground Check Exit
     void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

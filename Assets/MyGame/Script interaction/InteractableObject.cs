@@ -6,6 +6,8 @@ public class InteractableObject : MonoBehaviour, IInteractable
     public string itemName = "Objet";
     public string interactionMessage = "Vous avez ramassé un objet !";
 
+
+//Fonction d'interaction pour cet item, cela pourra changer en fonction de l'objet (pour l'instant c'est un médic)
     [Header("Effects")]
     public float HealingAmount = 20f;
     
