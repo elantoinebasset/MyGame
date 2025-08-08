@@ -4,7 +4,7 @@ public class PlayerInteraction : MonoBehaviour
 {
     [Header("Interaction Settings")]
     public float interactionRange = 3f;
-    public LayerMask interactableLayer = 1;
+    public LayerMask interactableLayer = 2;
     public KeyCode interactKey = KeyCode.E;
     
     [Header("UI")]
@@ -31,11 +31,14 @@ public class PlayerInteraction : MonoBehaviour
     {
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         RaycastHit hit;
+        
+        Debug.DrawRay(ray.origin, ray.direction * interactionRange, Color.red);
+
 
         if (Physics.Raycast(ray, out hit, interactionRange, interactableLayer))
         {
             IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-            
+
             if (interactable != null)
             {
                 SetCurrentInteractable(interactable);
