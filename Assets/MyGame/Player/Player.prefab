@@ -291,6 +291,8 @@ GameObject:
   - component: {fileID: 2110099536333489964}
   - component: {fileID: 1505226599965847517}
   - component: {fileID: 7686913154159148288}
+  - component: {fileID: 1487811864962025539}
+  - component: {fileID: 1098742650132663421}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -432,4 +434,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jumpForce: 5
+  IsRunning: 0
+  Stamina: 100
+  StaminaDrainRate: 1
+  StaminaRegenRate: 2
   CameraTransform: {fileID: 6149569856003616893}
+--- !u!114 &1487811864962025539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6694026345125682311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddca83f8c2aecf64c9433f3a2baeb940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentHealth: 100
+  RegenHealthRate: 0.1
+--- !u!114 &1098742650132663421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6694026345125682311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88daa3b3925535b49a099874d3826148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

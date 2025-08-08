@@ -9,13 +9,10 @@ public class UIManager : MonoBehaviour
     
     [Header("Player Reference")]
     public PlayerMouvement playerMovement;
-    
-    public float maxHealth = 100f;
-    public float currentHealth = 100f;
+    public PlayerHealth playerHealth;
 
     void Start()
     {
-        currentHealth = maxHealth;
         UpdateUI();
     }
 
@@ -35,7 +32,7 @@ public class UIManager : MonoBehaviour
 
         if (healthBar != null)
         {
-            healthBar.value = currentHealth;
+            healthBar.value = playerHealth.CurrentHealth;
         }
     }
 }
