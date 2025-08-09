@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Cinemachine;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class InventoryManager : MonoBehaviour
     [Header("Inventory")]
     public Sprite[] items = new Sprite[8];
     public KeyCode inventoryKey = KeyCode.I; 
+
+    [Header("Camera Reference")]
+    public CinemachineCamera cinemachineCamera; 
     
     private bool inventoryOpen = false;
 
@@ -35,12 +39,15 @@ public class InventoryManager : MonoBehaviour
         if (inventoryOpen)
         {
             Cursor.lockState = CursorLockMode.None;
-            Camera.main.GetComponent<CameraMovement>().enabled = false;
+            if (cinemachineCamera != null)
+                cinemachineCamera.enabled = false;
+
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Camera.main.GetComponent<CameraMovement>().enabled = true;
+            if (cinemachineCamera != null)
+                cinemachineCamera.enabled = false;
 
         }
         
