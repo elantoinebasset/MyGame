@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
     
     [Header("Inventory")]
     public Sprite[] items = new Sprite[8];
-    public KeyCode inventoryKey = KeyCode.E; 
+    public KeyCode inventoryKey = KeyCode.I; 
     
     private bool inventoryOpen = false;
 
