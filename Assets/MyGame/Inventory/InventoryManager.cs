@@ -1,0 +1,81 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InventoryManager : MonoBehaviour
+{
+    [Header("UI")]
+    public GameObject inventoryPanel;
+    public Image[] inventorySlots; 
+    
+    [Header("Inventory")]
+    public Sprite[] items = new Sprite[8];
+    public KeyCode inventoryKey = KeyCode.E; 
+    
+    private bool inventoryOpen = false;
+
+    void Start()
+    {
+        inventoryPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(inventoryKey))
+        {
+            ToggleInventory();
+        }
+    }
+
+    void ToggleInventory()
+    {
+        inventoryOpen = !inventoryOpen;
+        inventoryPanel.SetActive(inventoryOpen);
+
+
+        if (inventoryOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Camera.main.GetComponent<CameraMovement>().enabled = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Camera.main.GetComponent<CameraMovement>().enabled = true;
+
+        }
+        
+        UpdateUI();
+    }
+
+    public bool AddItem(Sprite itemSprite)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i] == null)
+            {
+                items[i] = itemSprite;
+                UpdateUI();
+                return true;
+            }
+        }
+        Debug.Log("Inventaire plein !");
+        return false;
+    }
+
+    void UpdateUI()
+    {
+        for (int i = 0; i < inventorySlots.Length; i++)
+        {
+            if (items[i] != null)
+            {
+                inventorySlots[i].sprite = items[i];
+                inventorySlots[i].color = Color.white;
+            }
+            else
+            {
+                inventorySlots[i].sprite = null;
+                inventorySlots[i].color = Color.gray;
+            }
+        }
+    }
+}
