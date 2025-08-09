@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class PlayerMouvement : MonoBehaviour
 {
-
+[Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     private Rigidbody rb;
     private bool isGrounded;
 
-
+[Header("Stamina Settings")]
     public float IsRunning = 0f;
     public float Stamina = 100f;
     public float StaminaDrainRate = 1f;
