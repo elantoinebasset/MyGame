@@ -19,11 +19,11 @@ public class InteractableObject : MonoBehaviour, IInteractable
             InventoryManager inventory = FindAnyObjectByType<InventoryManager>();
             if (inventory != null)
             {
-                bool itemAdded = inventory.AddItem(itemSprite);
+                bool itemAdded = inventory.AddItem(itemSprite, gameObject);
                 if (itemAdded)
                 {
                     Debug.Log($"{itemName} ajouté à l'inventaire !");
-                    Destroy(gameObject);
+                    gameObject.SetActive(false);
                 }
                 else
                 {

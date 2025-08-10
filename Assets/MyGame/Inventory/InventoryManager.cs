@@ -11,6 +11,7 @@ public class InventoryManager : MonoBehaviour
     
     [Header("Inventory")]
     public Sprite[] items = new Sprite[8];
+    public GameObject[] itemObjects = new GameObject[8];
     public KeyCode inventoryKey = KeyCode.I; 
     
     [Header("Camera Reference")]
@@ -56,13 +57,14 @@ public class InventoryManager : MonoBehaviour
         UpdateUI();
     }
     
-    public bool AddItem(Sprite itemSprite)
+    public bool AddItem(Sprite itemSprite, GameObject itemObject = null)
     {
         for (int i = 0; i < items.Length; i++)
         {
             if (items[i] == null)
             {
                 items[i] = itemSprite;
+                itemObjects[i] = itemObject;
                 UpdateUI();
                 return true;
             }
@@ -77,9 +79,28 @@ public class InventoryManager : MonoBehaviour
         contextMenu.ShowMenu(slotIndex, mousePosition);
     }
 
-    // Pour utiliser un objet (objet à coder)
+    // Pour utiliser un objet (objet à coder = Bandage Finish)
     public void UseItem(int slotIndex)
     {
+        if (itemObjects[slotIndex] != null)
+    {
+        GameObject itemObj = itemObjects[slotIndex];
+        
+        
+        Bandage bandage = itemObj.GetComponent<Bandage>();
+        if (bandage != null)
+        {
+            bandage.UseBandage();
+        }
+        
+        
+        Destroy(itemObj);
+        
+        
+        items[slotIndex] = null;
+        itemObjects[slotIndex] = null;
+        UpdateUI();
+    }
         Debug.Log($"Utilisation de l'objet dans le slot {slotIndex + 1}");
     }
     
