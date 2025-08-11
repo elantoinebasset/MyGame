@@ -92,6 +92,12 @@ public class InventoryManager : MonoBehaviour
         {
             bandage.UseBandage();
         }
+
+        Hamburger hamburger = itemObj.GetComponent<Hamburger>();
+        if (hamburger != null)
+        {
+            hamburger.UseHamburger();
+        }
         
         
         Destroy(itemObj);

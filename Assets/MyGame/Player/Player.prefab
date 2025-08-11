@@ -197,9 +197,11 @@ GameObject:
   - component: {fileID: 8298162026489198433}
   - component: {fileID: 2937794483914334265}
   - component: {fileID: 2936344830440569177}
-  - component: {fileID: 6743585565605422580}
   - component: {fileID: 1280372844392563457}
+  - component: {fileID: 6743585565605422580}
+  - component: {fileID: 3428651243653653333}
   - component: {fileID: 1716539596940012512}
+  - component: {fileID: 4205863437181755773}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -329,6 +331,20 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1280372844392563457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507646805612346840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddca83f8c2aecf64c9433f3a2baeb940, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentHealth: 100
+  RegenHealthRate: 0.1
 --- !u!114 &6743585565605422580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +364,7 @@ MonoBehaviour:
   StaminaDrainRate: 1
   StaminaRegenRate: 2
   CameraTransform: {fileID: 7228554334202119135}
---- !u!114 &1280372844392563457
+--- !u!114 &3428651243653653333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -357,11 +373,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 507646805612346840}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddca83f8c2aecf64c9433f3a2baeb940, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ec3c0bd6a43673428aa3709b00a49ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentHealth: 100
-  RegenHealthRate: 0.1
 --- !u!114 &1716539596940012512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +394,43 @@ MonoBehaviour:
     m_Bits: 64
   interactKey: 101
   interactionPrompt: {fileID: 0}
+--- !u!114 &4205863437181755773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507646805612346840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f15c7ce677d56bd49a82b48d281bd617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryPanel: {fileID: 0}
+  inventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  contextMenu: {fileID: 0}
+  items:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  itemObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  inventoryKey: 105
+  cinemachineCamera: {fileID: 4472301359257376928}
 --- !u!1 &796383618769653926
 GameObject:
   m_ObjectHideFlags: 0

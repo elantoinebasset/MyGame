@@ -606,7 +606,6 @@ GameObject:
   - component: {fileID: 797362200}
   - component: {fileID: 797362199}
   - component: {fileID: 797362198}
-  - component: {fileID: 797362202}
   - component: {fileID: 797362203}
   m_Layer: 6
   m_Name: Cube (1)
@@ -704,61 +703,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!331 &797362202
-SpriteMask:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 797362196}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10758, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
-  m_MaskAlphaCutoff: 0.2
-  m_FrontSortingLayerID: 0
-  m_BackSortingLayerID: 0
-  m_FrontSortingLayer: 0
-  m_BackSortingLayer: 0
-  m_FrontSortingOrder: 0
-  m_BackSortingOrder: 0
-  m_IsCustomRangeActive: 0
-  m_SpriteSortPoint: 0
-  m_MaskSource: 0
 --- !u!114 &797362203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -793,17 +737,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotIndex: 4
---- !u!114 &831530509 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4472301359257376928, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
-  m_PrefabInstance: {fileID: 3568179726453491213}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1745,7 +1678,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1280372844392563457, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
   m_PrefabInstance: {fileID: 3568179726453491213}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6694026345542460297}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddca83f8c2aecf64c9433f3a2baeb940, type: 3}
@@ -1767,6 +1700,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4205863437181755773, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
+      propertyPath: contextMenu
+      value: 
+      objectReference: {fileID: 412301989}
+    - target: {fileID: 4205863437181755773, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
+      propertyPath: inventoryPanel
+      value: 
+      objectReference: {fileID: 81382604}
+    - target: {fileID: 4205863437181755773, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
+      propertyPath: 'inventorySlots.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1962375758}
+    - target: {fileID: 4205863437181755773, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
+      propertyPath: 'inventorySlots.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1513175113}
     - target: {fileID: 6977506085906383976, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.8252816
@@ -1810,10 +1759,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 507646805612346840, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7686913154035892772}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
 --- !u!1001 &6101595626228335874
 PrefabInstance:
@@ -2260,59 +2206,28 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1190764526}
   m_SourcePrefab: {fileID: 100100000, guid: 8f585be7a48edf34b88211115091b35e, type: 3}
---- !u!1 &6694026345542460297 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 507646805612346840, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
-  m_PrefabInstance: {fileID: 3568179726453491213}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7686913154035892750 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6743585565605422580, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
   m_PrefabInstance: {fileID: 3568179726453491213}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6694026345542460297}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0de4e02bdbec03145bb6304681716712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7686913154035892772
+--- !u!114 &7686913154035892772 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4205863437181755773, guid: 521df31a4879ab0418bee34ece1d8058, type: 3}
+  m_PrefabInstance: {fileID: 3568179726453491213}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6694026345542460297}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f15c7ce677d56bd49a82b48d281bd617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryPanel: {fileID: 81382604}
-  inventorySlots:
-  - {fileID: 1962375758}
-  - {fileID: 1513175113}
-  contextMenu: {fileID: 412301989}
-  items:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  itemObjects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  inventoryKey: 105
-  cinemachineCamera: {fileID: 831530509}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
