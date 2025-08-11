@@ -79,7 +79,7 @@ public class InventoryManager : MonoBehaviour
         contextMenu.ShowMenu(slotIndex, mousePosition);
     }
 
-    // Pour utiliser un objet (objet à coder = Bandage Finish)
+    // Pour utiliser un objet (recherche IUsable dans l'objet(à ne pas oublier))
     public void UseItem(int slotIndex)
     {
         if (itemObjects[slotIndex] != null)
@@ -87,18 +87,12 @@ public class InventoryManager : MonoBehaviour
         GameObject itemObj = itemObjects[slotIndex];
         
         
-        Bandage bandage = itemObj.GetComponent<Bandage>();
-        if (bandage != null)
-        {
-            bandage.UseBandage();
-        }
-
-        Hamburger hamburger = itemObj.GetComponent<Hamburger>();
-        if (hamburger != null)
-        {
-            hamburger.UseHamburger();
-        }
+        IUsable usableItem = itemObj.GetComponent<IUsable>();
+            if (usableItem != null)
         
+        {
+            usableItem.UseItem();
+        }        
         
         Destroy(itemObj);
         
@@ -108,6 +102,30 @@ public class InventoryManager : MonoBehaviour
         UpdateUI();
     }
         Debug.Log($"Utilisation de l'objet dans le slot {slotIndex + 1}");
+    }
+
+// Me permet d'échanger les objets entre les slots
+    public void SwapItems(int fromSlot, int toSlot)
+    {
+        if (fromSlot < 0 || fromSlot >= items.Length || toSlot < 0 || toSlot >= items.Length)
+            return;
+
+// Les sprites et GameObjects sont à peu près les mêmes, mais un gere les images et l'autre les objets.
+
+
+        Sprite tempSprite = items[fromSlot];
+        GameObject tempObject = itemObjects[fromSlot];
+
+
+        items[fromSlot] = items[toSlot];
+        items[toSlot] = tempSprite;
+
+
+        itemObjects[fromSlot] = itemObjects[toSlot];
+        itemObjects[toSlot] = tempObject;
+
+        
+        UpdateUI();
     }
     
     void UpdateUI()

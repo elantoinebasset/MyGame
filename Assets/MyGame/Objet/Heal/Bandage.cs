@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bandage : MonoBehaviour
+public class Bandage : MonoBehaviour, IUsable
 {
     [Header("Bandage Properties")]
     public int healAmount = 20;
@@ -14,7 +14,7 @@ public class Bandage : MonoBehaviour
         
     }
 
-    public void UseBandage()
+    public void UseItem()
     {
         PlayerHealth playerHealth = FindAnyObjectByType<PlayerHealth>();
         if (playerHealth != null)

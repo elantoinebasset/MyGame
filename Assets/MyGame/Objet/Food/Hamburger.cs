@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hamburger : MonoBehaviour
+public class Hamburger : MonoBehaviour, IUsable
 {
     [Header("Hamburger Properties")]
     public int HungerRestored = 20;
@@ -13,7 +13,7 @@ public class Hamburger : MonoBehaviour
     {
         
     }
-    public void UseHamburger()
+    public void UseItem()
     {
         PlayerHunger playerHunger = FindAnyObjectByType<PlayerHunger>();
         if (playerHunger != null)
