@@ -6,6 +6,7 @@ public class ContextMenu : MonoBehaviour
 {
     [Header("UI Elements")]
     public Button useButton;
+    public Button DropButton;
     public Button cancelButton;
     
     private InventoryManager inventoryManager;
@@ -17,6 +18,7 @@ public class ContextMenu : MonoBehaviour
         
 
         useButton.onClick.AddListener(UseItem);
+        DropButton.onClick.AddListener(DropItem);
         cancelButton.onClick.AddListener(CloseMenu);
         
 
@@ -40,6 +42,15 @@ public class ContextMenu : MonoBehaviour
         if (inventoryManager != null && currentSlotIndex >= 0)
         {
             inventoryManager.UseItem(currentSlotIndex);
+        }
+        CloseMenu();
+    }
+
+    public void DropItem()
+    {
+        if (inventoryManager != null && currentSlotIndex >= 0)
+        {
+            inventoryManager.DropItem(currentSlotIndex);
         }
         CloseMenu();
     }

@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class Hamburger : MonoBehaviour, IUsable
+public class Hamburger : MonoBehaviour, IUsable, IDropable
 {
     [Header("Hamburger Properties")]
-    public int HungerRestored = 20;
-    public float UseTime = 1.0f;
+    public int HungerRestored = 120;
+    public float UseTime = 2.0f;
 
     [Header("Link Scripts")]
     public InventoryManager inventoryManager;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         
@@ -24,7 +24,12 @@ public class Hamburger : MonoBehaviour, IUsable
         }
     }
 
-    // Update is called once per frame
+    public void DropItem()
+    {
+        Debug.Log("Hamburger dropped!");
+    }
+
+    
     void Update()
     {
         

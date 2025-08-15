@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class InteractableObject : MonoBehaviour, IInteractable
 {
     [Header("Interaction")]
@@ -8,6 +9,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
     
     [Header("Inventory")]
     public Sprite itemSprite; 
+    public ItemSize itemSize = new ItemSize(1, 1); 
     public bool addToInventory = true; 
     public void Interact()
     {
@@ -19,7 +21,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
             InventoryManager inventory = FindAnyObjectByType<InventoryManager>();
             if (inventory != null)
             {
-                bool itemAdded = inventory.AddItem(itemSprite, gameObject);
+                bool itemAdded = inventory.AddItem(itemSprite, gameObject, itemSize);
                 if (itemAdded)
                 {
                     Debug.Log($"{itemName} ajouté à l'inventaire !");
