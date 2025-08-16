@@ -8,6 +8,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     public int slotIndex;
     
     private InventoryManager inventoryManager;
+    private BodyManager bodyManager; // AJOUTÉ : Référence au BodyManager
     private Canvas canvas;
     private CanvasGroup canvasGroup;
     private RectTransform rectTransform;
@@ -19,6 +20,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
     void Start()
     {
         inventoryManager = FindAnyObjectByType<InventoryManager>();
+        bodyManager = FindAnyObjectByType<BodyManager>(); // AJOUTÉ : Récupération du BodyManager
         canvas = GetComponentInParent<Canvas>();
         canvasGroup = GetComponent<CanvasGroup>();
         rectTransform = GetComponent<RectTransform>();
@@ -35,18 +37,40 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         // Clic droit = menu contextuel
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            // CORRIGÉ : Utilise la nouvelle méthode GetItemAtSlot
             var item = inventoryManager.GetItemAtSlot(slotIndex);
             if (item != null)
             {
                 inventoryManager.ShowContextMenu(slotIndex, Input.mousePosition);
             }
         }
+        // AJOUTÉ : Double-clic pour équiper dans la main (slot 0 du corps)
+        else if (eventData.button == PointerEventData.InputButton.Left && eventData.clickCount == 2)
+        {
+            QuickEquipToHand();
+        }
+    }
+    
+    // AJOUTÉ : Méthode pour équiper rapidement dans la main
+    private void QuickEquipToHand()
+    {
+        if (bodyManager == null || inventoryManager == null) return;
+        
+        var item = inventoryManager.GetItemAtSlot(slotIndex);
+        if (item != null)
+        {
+            if (bodyManager.TransferFromInventoryToBody(slotIndex, 0)) // Slot 0 = main
+            {
+                Debug.Log("Item équipé rapidement dans la main");
+            }
+            else
+            {
+                Debug.Log("Impossible d'équiper l'item dans la main");
+            }
+        }
     }
     
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // CORRIGÉ : Utilise la nouvelle méthode GetItemAtSlot au lieu de l'ancien système
         var item = inventoryManager.GetItemAtSlot(slotIndex);
         if (item != null)
         {
@@ -54,7 +78,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             canvasGroup.alpha = 0.6f; 
             canvasGroup.blocksRaycasts = false;
             
-            Debug.Log($"Début du drag de l'objet {item.size.width}x{item.size.height} depuis le slot {slotIndex}");
+            Debug.Log($"Début du drag de l'objet {item.size.width}x{item.size.height} depuis le slot inventaire {slotIndex}");
         }
     }
     
@@ -77,19 +101,17 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
         
-        Debug.Log($"Fin du drag depuis le slot {slotIndex}");
+        Debug.Log($"Fin du drag depuis le slot inventaire {slotIndex}");
     }
     
     public void OnDrop(PointerEventData eventData)
     {
-        // Récupère le slot d'origine du drag
+        // Gestion du drop depuis un autre slot d'inventaire
         InventorySlot draggedSlot = eventData.pointerDrag.GetComponent<InventorySlot>();
-        
         if (draggedSlot != null && draggedSlot != this)
         {
-            Debug.Log($"Drop: du slot {draggedSlot.slotIndex} vers le slot {this.slotIndex}");
+            Debug.Log($"Drop inventaire vers inventaire: du slot {draggedSlot.slotIndex} vers le slot {this.slotIndex}");
             
-            // Vérifier qu'il y a bien un objet à déplacer
             var itemToMove = inventoryManager.GetItemAtSlot(draggedSlot.slotIndex);
             if (itemToMove != null)
             {
@@ -97,15 +119,56 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
             }
             else
             {
-                Debug.Log(" Aucun objet à déplacer");
+                Debug.Log("Aucun objet à déplacer");
             }
+            return;
+        }
+        
+        // AJOUTÉ : Gestion du drop depuis les slots du corps
+        BodySlots draggedBodySlot = eventData.pointerDrag.GetComponent<BodySlots>();
+        if (draggedBodySlot != null && bodyManager != null)
+        {
+            Debug.Log($"Drop corps vers inventaire: du slot corps {draggedBodySlot.slotIndex} vers le slot inventaire {this.slotIndex}");
+            
+            var itemToMove = bodyManager.GetEquippedItem(draggedBodySlot.slotIndex);
+            if (itemToMove != null)
+            {
+                // Transférer l'item du corps vers l'inventaire
+                TransferFromBodyToInventory(draggedBodySlot.slotIndex);
+            }
+            return;
         }
     }
     
+    // AJOUTÉ : Méthode pour transférer depuis le corps vers l'inventaire
+    private void TransferFromBodyToInventory(int bodySlotIndex)
+    {
+        if (bodyManager == null || inventoryManager == null) return;
+        
+        var bodyItem = bodyManager.GetEquippedItem(bodySlotIndex);
+        if (bodyItem == null) return;
+        
+        var currentItem = inventoryManager.GetItemAtSlot(slotIndex);
+        
+        if (currentItem == null)
+        {
+            // Slot libre, simplement transférer
+            if (inventoryManager.AddItem(bodyItem.sprite, bodyItem.prefab, bodyItem.size))
+            {
+                // Vider le slot du corps après transfert réussi
+                bodyManager.ClearBodySlot(bodySlotIndex);
+                Debug.Log($"Item transféré du corps vers l'inventaire (slot {slotIndex})");
+            }
+        }
+        else
+        {
+            Debug.Log("Slot d'inventaire occupé, échange non implémenté pour l'instant");
+            // Tu peux implémenter l'échange si nécessaire
+        }
+    }
     
     private void CreateDragObject(InventoryManager.InventoryItem item)
     {
-        
         dragObject = new GameObject("DragObject");
         dragObject.transform.SetParent(canvas.transform, false);
         dragObject.transform.SetAsLastSibling();
@@ -115,9 +178,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IBeginDragHand
         dragImage.color = new Color(1, 1, 1, 0.8f);
         dragImage.raycastTarget = false;
         
-        
         RectTransform dragRect = dragObject.GetComponent<RectTransform>();
-        
         
         float baseSize = 80f; // Taille de base d'un slot
         float spacing = 5f;   // Espacement

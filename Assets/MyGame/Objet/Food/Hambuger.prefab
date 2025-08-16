@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4949278874842858466}
   - component: {fileID: 1727735284990715982}
   - component: {fileID: 3669255714772244839}
+  - component: {fileID: 8965936218698121234}
   m_Layer: 6
   m_Name: Hambuger
   m_TagString: Untagged
@@ -144,3 +145,24 @@ MonoBehaviour:
   HungerRestored: 120
   UseTime: 2
   inventoryManager: {fileID: 0}
+--- !u!114 &8965936218698121234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3580110545760337457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a10431c539d6e8408c636b6a0f5e75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armorData:
+    armorName: 
+    armorSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    armorPrefab: {fileID: 3580110545760337457}
+    armorType: 3
+    defenseValue: 0
+    size:
+      width: 0
+      height: 0

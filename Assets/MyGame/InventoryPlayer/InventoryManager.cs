@@ -33,11 +33,15 @@ public class InventoryManager : MonoBehaviour
         return grid[x, y];
     }
 
+
+
     public KeyCode inventoryKey = KeyCode.I;
+
+    [Header("BodyReferences")]
+    public BodyManager bodyManager;
 
     [Header("Hand Manager")]
     public HandManager handManager;
-
 
     [Header("Camera Reference")]
     public CinemachineCamera cinemachineCamera;
@@ -51,7 +55,7 @@ public class InventoryManager : MonoBehaviour
         public Sprite sprite;
         public GameObject prefab;
         public ItemSize size;
-        public int startX, startY; // Position de départ dans la grille
+        public int startX, startY;
 
         public InventoryItem(Sprite s, GameObject go, ItemSize sz, int x, int y)
         {
@@ -63,10 +67,10 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // Variables pour le système de grille
+    // LES VARIABLES DE LA GRILLE !!!!!!!
     private InventoryItem[,] grid;
     public List<InventoryItem> items;
-    private bool inventoryOpen = false;
+    public bool inventoryOpen = false;
 
     void Start()
     {
@@ -92,10 +96,11 @@ public class InventoryManager : MonoBehaviour
 
 
 
-    void ToggleInventory()
+    public void ToggleInventory()
     {
         inventoryOpen = !inventoryOpen;
         inventoryPanel.SetActive(inventoryOpen);
+        bodyManager.BodyPanel.SetActive(inventoryOpen);
 
         if (inventoryOpen)
         {
@@ -120,10 +125,9 @@ public class InventoryManager : MonoBehaviour
 
 
 
-    // NOUVELLE méthode AddItem avec support des tailles
+
     public bool AddItem(Sprite itemSprite, GameObject itemObject = null, ItemSize itemSize = default)
     {
-        // Si itemSize n'est pas défini, utiliser 1x1 par défaut
         if (itemSize.width == 0 || itemSize.height == 0)
         {
             itemSize = new ItemSize(1, 1);
@@ -131,7 +135,7 @@ public class InventoryManager : MonoBehaviour
 
         Debug.Log($"Tentative d'ajout d'un objet {itemSize.width}x{itemSize.height}");
 
-        // Chercher une position libre pour cet objet
+        // Cherche une position libre pour l'objet
         for (int y = 0; y <= gridHeight - itemSize.height; y++)
         {
             for (int x = 0; x <= gridWidth - itemSize.width; x++)
@@ -194,7 +198,7 @@ public class InventoryManager : MonoBehaviour
 
 
 
-    private void RemoveItem(InventoryItem item)
+    public void RemoveItem(InventoryItem item)
     {
         for (int y = item.startY; y < item.startY + item.size.height; y++)
         {
@@ -414,7 +418,7 @@ public class InventoryManager : MonoBehaviour
 
     private void MoveItem(InventoryItem item, int newStartX, int newStartY)
     {
-        // Libérer l'ancienne position
+        // Libére l'ancienne position
         for (int y = item.startY; y < item.startY + item.size.height; y++)
         {
             for (int x = item.startX; x < item.startX + item.size.width; x++)
@@ -424,7 +428,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // Mettre à jour les coordonnées de l'objet
+        // Met à jour les coordonnées de l'objet
         item.startX = newStartX;
         item.startY = newStartY;
 
@@ -452,12 +456,12 @@ public class InventoryManager : MonoBehaviour
                 inventorySlots[i].sprite = null;
                 inventorySlots[i].color = Color.gray;
 
-                // Reset la taille des slots
+                
                 RectTransform rect = inventorySlots[i].GetComponent<RectTransform>();
                 if (rect != null)
                 {
-                    // Taille par défaut d'un slot
-                    rect.sizeDelta = new Vector2(80, 80); // Ajustez selon vos slots
+                    
+                    rect.sizeDelta = new Vector2(80, 80);
                 }
             }
         }
@@ -498,12 +502,12 @@ public class InventoryManager : MonoBehaviour
             {
                 for (int x = item.startX; x < item.startX + item.size.width; x++)
                 {
-                    if (x != item.startX || y != item.startY) // Pas le slot principal
+                    if (x != item.startX || y != item.startY)
                     {
                         int slotIndex = y * gridWidth + x;
                         if (slotIndex < inventorySlots.Length && inventorySlots[slotIndex] != null)
                         {
-                            inventorySlots[slotIndex].color = new Color(0.5f, 0.5f, 0.5f, 0.5f); // Grisé et transparent
+                            inventorySlots[slotIndex].color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
                         }
                     }
                 }
