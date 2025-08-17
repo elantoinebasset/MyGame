@@ -4,179 +4,40 @@ public class HandManager : MonoBehaviour
 {
     [Header("Hand Settings")]
     public Transform handPosition;
-    public LayerMask interactionLayerMask = 1;
-
-    private GameObject currentItemInHand;
-    private InventoryManager.InventoryItem currentInventoryItem;
+    public LayerMask interactionLayerMask = 1;   
 
     [Header("References")]
     public InventoryManager inventoryManager;
-    public BodyManager bodyManager; // AJOUTÉ : Référence au BodyManager
+
+    // Variables privées
+    private GameObject currentItemInHand;
+    private InventoryManager.InventoryItem currentInventoryItem;
 
     void Update()
     {
-        // Vérifier si l'inventaire OU le panneau du corps est ouvert
-        bool inventoryOpen = inventoryManager != null && inventoryManager.inventoryPanel.activeSelf;
-        
-        if (!inventoryOpen)
-        {
-            if (Input.GetMouseButtonDown(0) && currentItemInHand != null)
-            {
-                UseItemInHand();
-            }
-            else if (Input.GetMouseButtonDown(1) && currentItemInHand != null)
-            {
-                ReturnItemToInventory();
-            }
-        }
+        // Ne rien faire si l'inventaire est ouvert ou si on n'a rien en main
+        if (IsInventoryOpen() || currentItemInHand == null)
+            return;
+
+        if (Input.GetMouseButtonDown(0))
+            UseItemInHand();
+        else if (Input.GetMouseButtonDown(1))
+            ReturnItemToInventory();
     }
 
+
+    /// Équipe un objet dans la main du joueur
     public void EquipItem(InventoryManager.InventoryItem item)
     {
-        // Si on a déjà un item en main, le retourner à l'inventaire
+        // Si on a déjà quelque chose en main, le remettre dans l'inventaire
         if (currentItemInHand != null)
-        {
             ReturnItemToInventory();
-        }
 
-        // Créer l'objet dans la main
-        if (item.prefab != null)
-        {
-            currentItemInHand = Instantiate(item.prefab, handPosition);
-            currentItemInHand.transform.localPosition = Vector3.zero;
-            currentItemInHand.transform.localRotation = Quaternion.identity;
-            currentItemInHand.SetActive(true);
+        if (item.prefab == null)
+            return;
 
-            // Désactiver la physique pour l'item en main
-            Collider itemCollider = currentItemInHand.GetComponent<Collider>();
-            if (itemCollider != null)
-                itemCollider.enabled = false;
-
-            Rigidbody itemRigidbody = currentItemInHand.GetComponent<Rigidbody>();
-            if (itemRigidbody != null)
-            {
-                itemRigidbody.isKinematic = true;
-                itemRigidbody.useGravity = false;
-            }
-
-            // Stocker la référence de l'item
-            currentInventoryItem = item;
-
-            Debug.Log($"{item.prefab.name} équipé en main !");
-        }
-    }
-
-    private void UseItemInHand()
-    {
-        if (currentItemInHand != null)
-        {
-            IUsable usableItem = currentItemInHand.GetComponent<IUsable>();
-            if (usableItem != null)
-            {
-                usableItem.UseItem();
-
-                // MODIFIÉ : Synchroniser avec le BodyManager
-                if (bodyManager != null)
-                {
-                    bodyManager.ClearBodySlot(0); // Vider le slot main (index 0)
-                }
-
-                Destroy(currentItemInHand);
-                currentItemInHand = null;
-                currentInventoryItem = null;
-
-                Debug.Log("Objet utilisé et détruit !");
-            }
-            else
-            {
-                Debug.Log("Cet objet ne peut pas être utilisé");
-            }
-        }
-    }
-
-    private void ReturnItemToInventory()
-    {
-        if (currentItemInHand != null && currentInventoryItem != null)
-        {
-            // Réactiver la physique avant de remettre dans l'inventaire
-            Collider itemCollider = currentItemInHand.GetComponent<Collider>();
-            if (itemCollider != null)
-                itemCollider.enabled = true;
-
-            Rigidbody itemRigidbody = currentItemInHand.GetComponent<Rigidbody>();
-            if (itemRigidbody != null)
-            {
-                itemRigidbody.isKinematic = false;
-                itemRigidbody.useGravity = true;
-            }
-
-            // Essayer de remettre l'item dans l'inventaire
-            bool itemReturned = inventoryManager.AddItem(
-                currentInventoryItem.sprite,
-                currentItemInHand,
-                currentInventoryItem.size
-            );
-
-            if (itemReturned)
-            {
-                // MODIFIÉ : Synchroniser avec le BodyManager
-                if (bodyManager != null)
-                {
-                    bodyManager.ClearBodySlot(0); // Vider le slot main (index 0)
-                }
-
-                currentItemInHand.SetActive(false);
-                currentItemInHand = null;
-                currentInventoryItem = null;
-                Debug.Log("Objet remis dans l'inventaire !");
-            }
-            else
-            {
-                // Remettre la physique comme avant si échec
-                if (itemCollider != null)
-                    itemCollider.enabled = false;
-                if (itemRigidbody != null)
-                {
-                    itemRigidbody.isKinematic = true;
-                    itemRigidbody.useGravity = false;
-                }
-                
-                Debug.Log("Inventaire plein ! Impossible de remettre l'objet.");
-            }
-        }
-    }
-
-    // AJOUTÉ : Méthode pour déposer l'item dans le monde
-    public void DropItemInWorld()
-    {
-        if (currentItemInHand != null && currentInventoryItem != null)
-        {
-            Vector3 spawnPos = Camera.main.transform.position + Camera.main.transform.forward * 2f;
-            Quaternion spawnRot = Camera.main.transform.rotation;
-
-            // Créer une nouvelle instance de l'objet dans le monde
-            GameObject droppedObject = Instantiate(currentInventoryItem.prefab, spawnPos, spawnRot);
-            droppedObject.SetActive(true);
-            
-            IDropable dropableItem = droppedObject.GetComponent<IDropable>();
-            if (dropableItem != null)
-            {
-                dropableItem.DropItem();
-            }
-
-            // Synchroniser avec le BodyManager
-            if (bodyManager != null)
-            {
-                bodyManager.ClearBodySlot(0); // Vider le slot main (index 0)
-            }
-
-            // Détruire l'item en main
-            Destroy(currentItemInHand);
-            currentItemInHand = null;
-            currentInventoryItem = null;
-
-            Debug.Log("Item déposé dans le monde depuis la main !");
-        }
+        CreateHandItem(item);
+        currentInventoryItem = item;
     }
 
     public void ClearHandItem()
@@ -186,40 +47,100 @@ public class HandManager : MonoBehaviour
             Destroy(currentItemInHand);
             currentItemInHand = null;
             currentInventoryItem = null;
-            Debug.Log("Main vidée");
         }
     }
 
-    // Méthode pour forcer le vidage sans retour à l'inventaire (utilisée par BodyManager)
-    public void ForceRemoveHandItem()
+    /// Force le retrait de l'objet sans le remettre dans l'inventaire
+    public void ForceRemoveHandItem() => ClearHandItem();
+
+    /// Fait tomber l'objet en main dans le monde
+    public void DropItemInWorld()
     {
-        if (currentItemInHand != null)
+        if (currentItemInHand == null || currentInventoryItem == null)
+            return;
+
+        var spawnPos = Camera.main.transform.position + Camera.main.transform.forward * 2f;
+        var dropped = Instantiate(currentInventoryItem.prefab, spawnPos, Camera.main.transform.rotation);
+        dropped.SetActive(true);
+        dropped.GetComponent<IDropable>()?.DropItem();
+
+        ClearHandItem();
+    }
+
+    // === PROPRIÉTÉS PUBLIQUES  ===
+    public bool HasItemInHand() => currentItemInHand != null;
+    public GameObject GetCurrentItem() => currentItemInHand;
+    public InventoryManager.InventoryItem GetCurrentInventoryItem() => currentInventoryItem;
+    public bool CanEquipItem() => currentItemInHand == null;
+
+    // === MÉTHODES PRIVÉES ===
+
+    /// Vérifie si l'inventaire est actuellement ouvert
+    private bool IsInventoryOpen() => inventoryManager?.inventoryPanel.activeSelf == true;
+
+    /// Crée l'objet dans la main du joueur
+    private void CreateHandItem(InventoryManager.InventoryItem item)
+    {
+        // Créer l'objet en tant qu'enfant de la position de la main
+        currentItemInHand = Instantiate(item.prefab, handPosition);
+        currentItemInHand.transform.localPosition = Vector3.zero;
+        currentItemInHand.transform.localRotation = Quaternion.identity;
+        currentItemInHand.SetActive(true);
+
+        // Configurer la physique pour qu'il reste dans la main
+        SetupHandItemPhysics(false);
+    }
+
+    /// Configure la physique de l'objet (collisions, gravité, etc.)
+    private void SetupHandItemPhysics(bool enablePhysics)
+    {
+        if (currentItemInHand == null)
+            return;
+
+        var collider = currentItemInHand.GetComponent<Collider>();
+        if (collider != null)
+            collider.enabled = enablePhysics;
+
+        var rigidbody = currentItemInHand.GetComponent<Rigidbody>();
+        if (rigidbody != null)
         {
-            Destroy(currentItemInHand);
+            rigidbody.isKinematic = !enablePhysics;
+            rigidbody.useGravity = enablePhysics;
+        }
+    }
+
+    /// Utilise l'objet que le joueur a en main
+    private void UseItemInHand()
+    {
+        var usableItem = currentItemInHand.GetComponent<IUsable>();
+        if (usableItem != null)
+        {
+            usableItem.UseItem();
+            ClearHandItem();
+        }
+    }
+
+    /// Remet l'objet dans l'inventaire
+    private void ReturnItemToInventory()
+    {
+        if (currentItemInHand == null || currentInventoryItem == null)
+            return;
+
+        // Réactiver la physique temporairement
+        SetupHandItemPhysics(true);
+
+        // Essayer de remettre l'objet dans l'inventaire
+        if (inventoryManager.AddItem(currentInventoryItem.sprite, currentItemInHand, currentInventoryItem.size))
+        {
+
+            currentItemInHand.SetActive(false);
             currentItemInHand = null;
             currentInventoryItem = null;
         }
-    }
-
-    public bool HasItemInHand()
-    {
-        return currentItemInHand != null;
-    }
-
-    public GameObject GetCurrentItem()
-    {
-        return currentItemInHand;
-    }
-
-    // AJOUTÉ : Obtenir l'item d'inventaire actuel
-    public InventoryManager.InventoryItem GetCurrentInventoryItem()
-    {
-        return currentInventoryItem;
-    }
-
-    // AJOUTÉ : Vérifier si on peut équiper un nouvel item
-    public bool CanEquipItem()
-    {
-        return currentItemInHand == null;
+        else
+        {
+            SetupHandItemPhysics(false);
+            Debug.Log("Impossible de remettre l'objet dans l'inventaire - inventaire plein !");
+        }
     }
 }

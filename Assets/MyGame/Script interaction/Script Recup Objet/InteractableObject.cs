@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -30,7 +31,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
                 else
                 {
                     Debug.Log("Inventaire plein ! Impossible d'ajouter " + itemName);
-                    
+
                 }
             }
         }

@@ -1,4 +1,3 @@
-// Me permet d'interagir avec les slots d'inventaire ET du corps (configurer les clics et l'apparition du menu contextuel)
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,197 +7,134 @@ public class ContextMenu : MonoBehaviour
     public Button useButton;
     public Button DropButton;
     public Button cancelButton;
-    
+
+
     private InventoryManager inventoryManager;
-    private BodyManager bodyManager; // AJOUTÉ : Référence au BodyManager
     private int currentSlotIndex = -1;
-    private bool isBodySlot = false; // AJOUTÉ : Pour savoir si on travaille avec un slot du corps
-    
+
     void Start()
     {
         inventoryManager = FindAnyObjectByType<InventoryManager>();
-        bodyManager = FindAnyObjectByType<BodyManager>(); // AJOUTÉ
-        
+
+
         useButton.onClick.AddListener(UseItem);
         DropButton.onClick.AddListener(DropItem);
         cancelButton.onClick.AddListener(CloseMenu);
-        
+
+
         gameObject.SetActive(false);
     }
-    
-    // Méthode existante pour les slots d'inventaire
+
+
+    /// Affiche le menu à la position de la souris pour un slot d'inventaire
+
     public void ShowMenu(int slotIndex, Vector3 mousePosition)
     {
-        currentSlotIndex = slotIndex;
-        isBodySlot = false; // C'est un slot d'inventaire
-        
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        rectTransform.position = mousePosition;
-        
-        // Personnaliser les boutons pour l'inventaire
-        UpdateButtonsForInventory();
-        
-        gameObject.SetActive(true);
+        SetupMenu(slotIndex, mousePosition);
+        UpdateButtonText("Équiper", "Déposer");
     }
-    
-    // AJOUTÉ : Nouvelle méthode pour les slots du corps
-    public void ShowMenuForBodySlot(int bodySlotIndex, Vector3 mousePosition)
-    {
-        currentSlotIndex = bodySlotIndex;
-        isBodySlot = true; // C'est un slot du corps
-        
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        rectTransform.position = mousePosition;
-        
-        // Personnaliser les boutons pour le corps
-        UpdateButtonsForBody(bodySlotIndex);
-        
-        gameObject.SetActive(true);
-    }
-    
-    // AJOUTÉ : Personnaliser les boutons pour l'inventaire
-    private void UpdateButtonsForInventory()
-    {
-        if (useButton != null)
-        {
-            Text buttonText = useButton.GetComponentInChildren<Text>();
-            if (buttonText != null)
-                buttonText.text = "Équiper"; // Ou "Utiliser"
-        }
-        
-        if (DropButton != null)
-        {
-            Text buttonText = DropButton.GetComponentInChildren<Text>();
-            if (buttonText != null)
-                buttonText.text = "Déposer";
-        }
-    }
-    
-    // AJOUTÉ : Personnaliser les boutons pour le corps
-    private void UpdateButtonsForBody(int bodySlotIndex)
-    {
-        if (bodyManager == null) return;
-        
-        BodyManager.SlotType slotType = bodyManager.GetSlotType(bodySlotIndex);
-        
-        if (useButton != null)
-        {
-            Text buttonText = useButton.GetComponentInChildren<Text>();
-            if (buttonText != null)
-            {
-                // Personnaliser selon le type de slot
-                switch (slotType)
-                {
-                    case BodyManager.SlotType.Hand:
-                        buttonText.text = "Utiliser";
-                        break;
-                    case BodyManager.SlotType.Head:
-                    case BodyManager.SlotType.Body:
-                    case BodyManager.SlotType.Feet:
-                        buttonText.text = "Retirer";
-                        break;
-                    default:
-                        buttonText.text = "Retirer";
-                        break;
-                }
-            }
-        }
-        
-        if (DropButton != null)
-        {
-            Text buttonText = DropButton.GetComponentInChildren<Text>();
-            if (buttonText != null)
-                buttonText.text = "Déposer";
-        }
-    }
-    
+
+
+    /// Utilise l'objet (l'équipe dans la main)
+
+
     public void UseItem()
     {
-        if (currentSlotIndex < 0) return;
+        if (currentSlotIndex == -2)  // Slot de main
+        {
+            UnequipItem();
+        }
+        else if (currentSlotIndex >= 0 && inventoryManager != null)
+        {
+            inventoryManager.UseItem(currentSlotIndex);
+        }
         
-        if (isBodySlot)
-        {
-            // Logique pour les slots du corps
-            if (bodyManager != null)
-            {
-                BodyManager.SlotType slotType = bodyManager.GetSlotType(currentSlotIndex);
-                
-                if (slotType == BodyManager.SlotType.Hand)
-                {
-                    // Pour la main, utiliser l'item
-                    UseHandItem();
-                }
-                else
-                {
-                    // Pour les autres slots, retirer et remettre dans l'inventaire
-                    bodyManager.ReturnItemToInventory(currentSlotIndex);
-                }
-            }
-        }
-        else
-        {
-            // Logique existante pour l'inventaire
-            if (inventoryManager != null)
-            {
-                inventoryManager.UseItem(currentSlotIndex);
-            }
-        }
         CloseMenu();
-    }
-    
-    // AJOUTÉ : Méthode pour utiliser l'item en main
-    private void UseHandItem()
-    {
-        if (bodyManager != null && bodyManager.handManager != null)
-        {
-            if (bodyManager.handManager.HasItemInHand())
-            {
-                var currentItem = bodyManager.handManager.GetCurrentItem();
-                if (currentItem != null)
-                {
-                    IUsable usableItem = currentItem.GetComponent<IUsable>();
-                    if (usableItem != null)
-                    {
-                        usableItem.UseItem();
-                        Debug.Log("Item utilisé depuis le menu contextuel");
-                        bodyManager.handManager.ForceRemoveHandItem();
-                    }
-                    else
-                    {
-                        Debug.Log("Cet item ne peut pas être utilisé");
-                    }
-                }
-            }
-        }
     }
 
     public void DropItem()
     {
-        if (currentSlotIndex < 0) return;
+        if (currentSlotIndex == -2)  // Slot de main
+        {
+            ThrowItem();
+        }
+        else if (currentSlotIndex >= 0 && inventoryManager != null)
+        {
+            inventoryManager.DropItem(currentSlotIndex);
+        }
         
-        if (isBodySlot)
+        CloseMenu();
+    }
+
+
+    public void CloseMenu()
+    {
+        gameObject.SetActive(false);
+        currentSlotIndex = -1;
+    }
+
+    /// Configure le menu avec les paramètres donnés
+    private void SetupMenu(int slotIndex, Vector3 mousePosition)
+    {
+        currentSlotIndex = slotIndex;
+        GetComponent<RectTransform>().position = mousePosition;
+        gameObject.SetActive(true);
+    }
+
+    /// Met à jour le texte des boutons
+    private void UpdateButtonText(string useText, string dropText)
+    {
+        SetButtonText(useButton, useText);
+        SetButtonText(DropButton, dropText);
+    }
+
+    /// Change le texte d'un bouton
+    private void SetButtonText(Button button, string text)
+    {
+        var textComponent = button?.GetComponentInChildren<Text>();
+        if (textComponent != null)
+            textComponent.text = text;
+    }
+
+
+    public void ShowMenuForHandSlot(Vector3 mousePosition)
+    {
+        SetupMenu(-2, mousePosition);  // -2 pour identifier que c'est le slot de main
+        UpdateButtonText("Déséquiper", "Jeter");
+    }
+
+    public void UnequipItem()
+    {
+        var handManager = FindAnyObjectByType<HandManager>();
+        var inventoryManager = FindAnyObjectByType<InventoryManager>();
+
+        if (handManager != null && handManager.HasItemInHand())
         {
-            if (bodyManager != null)
+            var currentItem = handManager.GetCurrentInventoryItem();
+
+            // Essayer de remettre dans l'inventaire
+            if (inventoryManager.AddItem(currentItem.sprite, currentItem.prefab, currentItem.size))
             {
-                bodyManager.DropBodyItem(currentSlotIndex);
+                handManager.ClearHandItem();
+            }
+            else
+            {
+                Debug.Log("Inventaire plein - impossible de déséquiper !");
             }
         }
-        else
-        {
-            if (inventoryManager != null)
-            {
-                inventoryManager.DropItem(currentSlotIndex);
-            }
-        }
+
         CloseMenu();
     }
     
-    public void CloseMenu()
+    public void ThrowItem()
+{
+    var handManager = FindAnyObjectByType<HandManager>();
+    
+    if (handManager != null && handManager.HasItemInHand())
     {
-        Debug.Log("Menu contextuel fermé (Annuler)");
-        gameObject.SetActive(false);
-        
-        currentSlotIndex = -1;
-        isBodySlot = false;
+        handManager.DropItemInWorld();
     }
+    
+    CloseMenu();
+}
 }
